@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-service
+  labels:
+    app: flask-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-service
+  template:
+    metadata:
+      labels:
+        app: flask-service
+    spec:
+      containers:
+        - name: flask-service
+          image: image-registry.openshift-internal.net/flask-service:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: GUNICORN_WORKERS
+              value: "2"
+            - name: GUNICORN_THREADS
+              value: "4"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  labels:
+    app: flask-service
+spec:
+  selector:
+    app: flask-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: flask-service
+  labels:
+    app: flask-service
+spec:
+  to:
+    kind: Service
+    name: flask-service
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
