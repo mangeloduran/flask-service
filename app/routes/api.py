@@ -6,3 +6,7 @@ bp = Blueprint("api", __name__, url_prefix="/api/v1")
 @bp.route("/example", methods=["GET"])
 def example():
     return jsonify({"message": "hello"})
+
+@bp.route("/data", methods=["POST"])
+def data():
+    return jsonify({"message": "data received"})
