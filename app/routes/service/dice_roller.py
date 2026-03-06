@@ -6,3 +6,4 @@ def roll_dice(num_dice=1, num_sides=6):
     
     rolls = random.randint(1, num_sides + 1, size=num_dice).tolist()
     return rolls
+
