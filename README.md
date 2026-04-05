@@ -46,6 +46,15 @@ docker build -t flask-service .
 docker run -p 8080:8080 flask-service
 ```
 
+## Testing
+
+Run the test suite locally or in CI with:
+
+```bash
+pip install -r requirements.txt pytest
+python -m pytest -q tests
+```
+
 ## API Endpoints
 
 | Method | Path | Description |
@@ -53,6 +62,9 @@ docker run -p 8080:8080 flask-service
 | GET | `/healthz` | Liveness probe |
 | GET | `/readyz` | Readiness probe |
 | GET | `/api/v1/example` | Example endpoint |
+| POST | `/service/add_my_data` | Store vendor product data |
+| GET | `/service/add_my_data` | Retrieve all product data |
+| DELETE | `/service/add_my_data/<product_id>` | Delete one product by product id |
 
 ## Configuration
 
