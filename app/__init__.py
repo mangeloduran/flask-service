@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.config import Config
 from app.routes import health, api
-from app.routes.service import lotto_number_gen, add_my_data
+from app.routes.service import lotto_number_gen, add_my_data, weighted_lotto
 
 
 def create_app(config_class=Config):
@@ -11,7 +11,8 @@ def create_app(config_class=Config):
 
     app.register_blueprint(health.bp)
     app.register_blueprint(api.bp)
-    app.register_blueprint(lotto_number_gen.bp) 
+    app.register_blueprint(lotto_number_gen.bp)
     app.register_blueprint(add_my_data.bp)
-    
+    app.register_blueprint(weighted_lotto.bp)
+
     return app
